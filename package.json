@@ -1,12 +1,17 @@
 {
-    "name": "majik-signature-desktop-releases",
-    "version": "0.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "package:all": "node scripts/package-all.mjs"
-    },
-    "engines": {
-        "node": ">=20"
-    }
+  "name": "majik-signature-desktop-releases",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "package:all": "node scripts/package-all.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "typescript": "^7.0.2"
+  }
 }

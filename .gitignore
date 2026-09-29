@@ -1,5 +1,4 @@
-# Local release installers
-release-input/*
+
 
 # Generated release workspace
 .release/
@@ -11,3 +10,6 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+
+release-input/*
+!release-input/README.md
