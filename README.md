@@ -249,8 +249,8 @@ Majik Notary can be used with documents, images, audio, video, applications, sof
 
 Learn more:
 
-[Majik Notary Explained](https://majikah.solutions/articles/majik-notary-explained)
-[How to Notarize Sealed Files](https://majikah.solutions/products/majik-signature/docs/ms-notarizing-sealed-files)
+- [Majik Notary Explained](https://majikah.solutions/articles/majik-notary-explained)
+- [How to Notarize Sealed Files](https://majikah.solutions/products/majik-signature/docs/ms-notarizing-sealed-files)
 
 ---
 
@@ -328,10 +328,10 @@ Supported workflows include:
 Templates, custom fonts, and audio timeline/mixing controls are available for supported workflows.
 
 Learn more:
-[How to Sign in Majik Signature](https://majikah.solutions/products/majik-signature/docs/signing-documentation)
-[How to Sign with Multiple People](https://majikah.solutions/articles/multi-party-signing-guide)
-[How to Sign Stems and Audio Files](https://majikah.solutions/articles/signing-stems-and-masters-guide)
-[Universal File Signing for Photographers](https://majikah.solutions/articles/universal-file-signing-for-photographers)
+- [How to Sign in Majik Signature](https://majikah.solutions/products/majik-signature/docs/signing-documentation)
+- [How to Sign with Multiple People](https://majikah.solutions/articles/multi-party-signing-guide)
+- [How to Sign Stems and Audio Files](https://majikah.solutions/articles/signing-stems-and-masters-guide)
+- [Universal File Signing for Photographers](https://majikah.solutions/articles/universal-file-signing-for-photographers)
 
 ---
 
