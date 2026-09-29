@@ -1,0 +1,13 @@
+# Local release installers
+release-input/*
+
+# Generated release workspace
+.release/
+
+# Node
+node_modules/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.log

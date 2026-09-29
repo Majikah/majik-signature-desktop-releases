@@ -1,0 +1,12 @@
+{
+    "name": "majik-signature-desktop-releases",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "package:all": "node scripts/package-all.mjs"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}

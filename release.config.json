@@ -1,0 +1,29 @@
+{
+    "repository": "Majikah/majik-signature-desktop-releases",
+    "productName": "Majik Signature",
+    "platforms": {
+        "windows": {
+            "enabled": true,
+            "requiredExtensions": [
+                ".exe",
+                ".msix",
+                ".msi"
+            ]
+        },
+        "linux": {
+            "enabled": true,
+            "requiredExtensions": [
+                ".deb",
+                ".AppImage",
+                ".rpm",
+                ".snap"
+            ]
+        },
+        "macos": {
+            "enabled": false,
+            "requiredExtensions": [
+                ".dmg"
+            ]
+        }
+    }
+}
