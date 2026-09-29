@@ -52,12 +52,30 @@ function run(
   args: string[],
   options: RunOptions = {},
 ): string {
+  const stdio = options.stdio ?? "pipe";
+
   try {
-    return execFileSync(command, args, {
+    const output = execFileSync(command, args, {
       cwd: ROOT,
       encoding: "utf8",
-      stdio: options.stdio ?? "pipe",
-    }).trim();
+      stdio,
+    });
+
+    // When stdio is "inherit", execFileSync() does not return
+    // command output. The command has already succeeded.
+    if (stdio === "inherit") {
+      return "";
+    }
+
+    if (typeof output === "string") {
+      return output.trim();
+    }
+
+    if (Buffer.isBuffer(output)) {
+      return (output as Buffer).toString("utf8").trim();
+    }
+
+    return "";
   } catch (error: unknown) {
     if (error && typeof error === "object") {
       const output = error as {
@@ -77,11 +95,7 @@ function run(
     fail(`Command failed: ${command} ${args.join(" ")}`);
   }
 }
-
-function tryRun(
-  command: string,
-  args: string[],
-): CommandResult {
+function tryRun(command: string, args: string[]): CommandResult {
   try {
     const stdout = execFileSync(command, args, {
       cwd: ROOT,
@@ -110,35 +124,22 @@ function tryRun(
     };
 
     return {
-      status:
-        typeof output.status === "number"
-          ? output.status
-          : 1,
-      stdout: output.stdout
-        ? String(output.stdout).trim()
-        : "",
-      stderr: output.stderr
-        ? String(output.stderr).trim()
-        : "",
+      status: typeof output.status === "number" ? output.status : 1,
+      stdout: output.stdout ? String(output.stdout).trim() : "",
+      stderr: output.stderr ? String(output.stderr).trim() : "",
     };
   }
 }
 
-function normalizeVersion(
-  input: string | undefined,
-): string {
+function normalizeVersion(input: string | undefined): string {
   const value = String(input ?? "")
     .trim()
     .replace(/^v/i, "");
 
-  const match = value.match(
-    /^(\d+)\.(\d+)(?:\.(\d+))?$/,
-  );
+  const match = value.match(/^(\d+)\.(\d+)(?:\.(\d+))?$/);
 
   if (!match) {
-    fail(
-      `Invalid version "${input}". Use formats such as 0.17 or 0.17.0.`,
-    );
+    fail(`Invalid version "${input}". Use formats such as 0.17 or 0.17.0.`);
   }
 
   return `${match[1]}.${match[2]}.${match[3] ?? "0"}`;
@@ -146,24 +147,15 @@ function normalizeVersion(
 
 function readJson<T>(file: string): T {
   try {
-    return JSON.parse(
-      fs.readFileSync(file, "utf8"),
-    ) as T;
+    return JSON.parse(fs.readFileSync(file, "utf8")) as T;
   } catch (error: unknown) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : String(error);
+    const message = error instanceof Error ? error.message : String(error);
 
-    fail(
-      `Unable to read JSON file: ${file}\n${message}`,
-    );
+    fail(`Unable to read JSON file: ${file}\n${message}`);
   }
 }
 
-function sha256(
-  filePath: string,
-): Promise<string> {
+function sha256(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha256");
     const stream = fs.createReadStream(filePath);
@@ -190,22 +182,12 @@ function getFiles(dir: string): string[] {
       withFileTypes: true,
     })
     .filter((entry) => entry.isFile())
-    .map((entry) =>
-      path.join(dir, entry.name),
-    )
-    .sort((a, b) =>
-      path.basename(a).localeCompare(
-        path.basename(b),
-      ),
-    );
+    .map((entry) => path.join(dir, entry.name))
+    .sort((a, b) => path.basename(a).localeCompare(path.basename(b)));
 }
 
 function isChangelog(file: string): boolean {
-  return (
-    path
-      .basename(file)
-      .toLowerCase() === "changelog.md"
-  );
+  return path.basename(file).toLowerCase() === "changelog.md";
 }
 
 function parseArguments(): {
@@ -216,14 +198,10 @@ function parseArguments(): {
 
   const dryRun = args.includes("--dry-run");
 
-  const versionArgument = args.find(
-    (arg) => !arg.startsWith("--"),
-  );
+  const versionArgument = args.find((arg) => !arg.startsWith("--"));
 
   if (!versionArgument) {
-    fail(
-      "Usage: npm run package:all -- 0.17.0 [--dry-run]",
-    );
+    fail("Usage: npm run package:all -- 0.17.0 [--dry-run]");
   }
 
   return {
@@ -236,8 +214,7 @@ function parseArguments(): {
 // Arguments
 //
 
-const { version, dryRun } =
-  parseArguments();
+const { version, dryRun } = parseArguments();
 
 const tag = `v${version}`;
 
@@ -245,25 +222,15 @@ const tag = `v${version}`;
 // Configuration
 //
 
-const config =
-  readJson<ReleaseConfig>(
-    path.join(
-      ROOT,
-      "release.config.json",
-    ),
-  );
+const config = readJson<ReleaseConfig>(path.join(ROOT, "release.config.json"));
 
 //
 // Header
 //
 
 console.log("");
-console.log(
-  "Majik Signature Release Publisher",
-);
-console.log(
-  "──────────────────────────────────",
-);
+console.log("Majik Signature Release Publisher");
+console.log("──────────────────────────────────");
 console.log(`Version: ${version}`);
 console.log(`Tag: ${tag}`);
 console.log("");
@@ -272,16 +239,9 @@ console.log("");
 // GitHub authentication
 //
 
-console.log(
-  "Checking GitHub authentication...",
-);
+console.log("Checking GitHub authentication...");
 
-const githubUser = run("gh", [
-  "api",
-  "user",
-  "--jq",
-  ".login",
-]);
+const githubUser = run("gh", ["api", "user", "--jq", ".login"]);
 
 if (!githubUser) {
   fail(
@@ -289,9 +249,7 @@ if (!githubUser) {
   );
 }
 
-console.log(
-  `✓ Authenticated as ${githubUser}`,
-);
+console.log(`✓ Authenticated as ${githubUser}`);
 
 //
 // Repository
@@ -324,53 +282,27 @@ console.log(`✓ ${currentRepo}`);
 // Paths
 //
 
-const inputDir = path.join(
-  ROOT,
-  "release-input",
-  version,
-);
+const inputDir = path.join(ROOT, "release-input", version);
 
-const releaseOutputDir = path.join(
-  ROOT,
-  ".release",
-  version,
-);
+const releaseOutputDir = path.join(ROOT, ".release", version);
 
-const releaseRecordDir = path.join(
-  ROOT,
-  "release-records",
-);
+const releaseRecordDir = path.join(ROOT, "release-records");
 
-const changelogFile = path.join(
-  inputDir,
-  "CHANGELOG.md",
-);
+const changelogFile = path.join(inputDir, "CHANGELOG.md");
 
 //
 // Validate input directory
 //
 
-if (
-  !fs.existsSync(inputDir) ||
-  !fs.statSync(inputDir).isDirectory()
-) {
-  fail(
-    `Missing release input directory:\n${inputDir}`,
-  );
+if (!fs.existsSync(inputDir) || !fs.statSync(inputDir).isDirectory()) {
+  fail(`Missing release input directory:\n${inputDir}`);
 }
 
-if (
-  !fs.existsSync(changelogFile) ||
-  !fs.statSync(changelogFile).isFile()
-) {
-  fail(
-    `Missing CHANGELOG.md:\n${changelogFile}`,
-  );
+if (!fs.existsSync(changelogFile) || !fs.statSync(changelogFile).isFile()) {
+  fail(`Missing CHANGELOG.md:\n${changelogFile}`);
 }
 
-console.log(
-  `\nChecking release-input/${version}/...`,
-);
+console.log(`\nChecking release-input/${version}/...`);
 
 const allFiles = getFiles(inputDir);
 
@@ -382,9 +314,7 @@ if (allFiles.length === 0) {
 // Separate CHANGELOG.md from installer assets
 //
 
-const installerFiles = allFiles.filter(
-  (file) => !isChangelog(file),
-);
+const installerFiles = allFiles.filter((file) => !isChangelog(file));
 
 if (installerFiles.length === 0) {
   fail(
@@ -396,51 +326,32 @@ if (installerFiles.length === 0) {
 // Validate configured platforms
 //
 
-const enabledPlatforms =
-  Object.entries(
-    config.platforms,
-  ).filter(
-    ([, platform]) => platform.enabled,
-  );
+const enabledPlatforms = Object.entries(config.platforms).filter(
+  ([, platform]) => platform.enabled,
+);
 
 if (enabledPlatforms.length === 0) {
-  fail(
-    "No enabled platforms are configured in release.config.json.",
-  );
+  fail("No enabled platforms are configured in release.config.json.");
 }
 
 const missing: string[] = [];
 
-for (const [
-  platformName,
-  platform,
-] of enabledPlatforms) {
+for (const [platformName, platform] of enabledPlatforms) {
   console.log(`\n${platformName}:`);
 
   for (const extension of platform.requiredExtensions) {
-    const matches = installerFiles.filter(
-      (file) =>
-        file
-          .toLowerCase()
-          .endsWith(
-            extension.toLowerCase(),
-          ),
+    const matches = installerFiles.filter((file) =>
+      file.toLowerCase().endsWith(extension.toLowerCase()),
     );
 
     if (matches.length === 0) {
-      missing.push(
-        `${platformName}: ${extension}`,
-      );
+      missing.push(`${platformName}: ${extension}`);
 
-      console.log(
-        `  ✗ ${extension}`,
-      );
+      console.log(`  ✗ ${extension}`);
     } else {
       console.log(
         `  ✓ ${extension} (${matches
-          .map((file) =>
-            path.basename(file),
-          )
+          .map((file) => path.basename(file))
           .join(", ")})`,
       );
     }
@@ -453,28 +364,20 @@ if (missing.length > 0) {
       `Release ${version} is incomplete.`,
       "",
       "Missing:",
-      ...missing.map(
-        (item) => `  ✗ ${item}`,
-      ),
+      ...missing.map((item) => `  ✗ ${item}`),
     ].join("\n"),
   );
 }
 
-console.log(
-  "\n✓ All required platform assets found",
-);
+console.log("\n✓ All required platform assets found");
 
-console.log(
-  "✓ CHANGELOG.md found",
-);
+console.log("✓ CHANGELOG.md found");
 
 //
 // Check existing GitHub release
 //
 
-console.log(
-  "\nChecking existing GitHub release...",
-);
+console.log("\nChecking existing GitHub release...");
 
 const releaseCheck = tryRun("gh", [
   "api",
@@ -482,27 +385,15 @@ const releaseCheck = tryRun("gh", [
 ]);
 
 if (releaseCheck.status === 0) {
-  fail(
-    `GitHub release ${tag} already exists.`,
-  );
+  fail(`GitHub release ${tag} already exists.`);
 }
 
 // A 404 is expected when the release does not exist.
 // Any other failure should be treated as an actual error.
-if (
-  releaseCheck.status !== 0 &&
-  !/404|not found/i.test(
-    releaseCheck.stderr,
-  )
-) {
-  console.error(
-    releaseCheck.stderr ||
-      releaseCheck.stdout,
-  );
+if (releaseCheck.status !== 0 && !/404|not found/i.test(releaseCheck.stderr)) {
+  console.error(releaseCheck.stderr || releaseCheck.stdout);
 
-  fail(
-    `Unable to check whether GitHub release ${tag} exists.`,
-  );
+  fail(`Unable to check whether GitHub release ${tag} exists.`);
 }
 
 console.log("✓ No existing release");
@@ -511,24 +402,17 @@ console.log("✓ No existing release");
 // Check existing remote tag
 //
 
-console.log(
-  "\nChecking existing remote tag...",
-);
+console.log("\nChecking existing remote tag...");
 
-const existingTag = run(
-  "git",
-  [
-    "ls-remote",
-    "--tags",
-    "origin",
-    `refs/tags/${tag}`,
-  ],
-);
+const existingTag = run("git", [
+  "ls-remote",
+  "--tags",
+  "origin",
+  `refs/tags/${tag}`,
+]);
 
 if (existingTag) {
-  fail(
-    `Remote tag ${tag} already exists.`,
-  );
+  fail(`Remote tag ${tag} already exists.`);
 }
 
 console.log("✓ No existing tag");
@@ -537,14 +421,9 @@ console.log("✓ No existing tag");
 // Git working tree
 //
 
-console.log(
-  "\nChecking Git working tree...",
-);
+console.log("\nChecking Git working tree...");
 
-const gitStatus = run("git", [
-  "status",
-  "--porcelain",
-]);
+const gitStatus = run("git", ["status", "--porcelain"]);
 
 if (gitStatus) {
   console.log("\nGit working tree:");
@@ -555,17 +434,13 @@ if (gitStatus) {
   );
 }
 
-console.log(
-  "✓ Git working tree is clean",
-);
+console.log("✓ Git working tree is clean");
 
 //
 // Generate SHA-256 checksums
 //
 
-console.log(
-  "\nGenerating SHA-256 checksums...",
-);
+console.log("\nGenerating SHA-256 checksums...");
 
 fs.rmSync(releaseOutputDir, {
   recursive: true,
@@ -584,9 +459,7 @@ for (const file of installerFiles) {
   const size = fs.statSync(file).size;
   const hash = await sha256(file);
 
-  checksums.push(
-    `${hash}  ${filename}`,
-  );
+  checksums.push(`${hash}  ${filename}`);
 
   assets.push({
     filename,
@@ -601,15 +474,11 @@ for (const file of installerFiles) {
 // Hash CHANGELOG.md
 //
 
-const changelogHash =
-  await sha256(changelogFile);
+const changelogHash = await sha256(changelogFile);
 
-const changelogSize =
-  fs.statSync(changelogFile).size;
+const changelogSize = fs.statSync(changelogFile).size;
 
-checksums.push(
-  `${changelogHash}  CHANGELOG.md`,
-);
+checksums.push(`${changelogHash}  CHANGELOG.md`);
 
 assets.push({
   filename: "CHANGELOG.md",
@@ -617,28 +486,17 @@ assets.push({
   sha256: changelogHash,
 });
 
-console.log(
-  "✓ CHANGELOG.md",
-);
+console.log("✓ CHANGELOG.md");
 
 //
 // Write SHA256SUMS.txt
 //
 
-const checksumFile = path.join(
-  releaseOutputDir,
-  "SHA256SUMS.txt",
-);
+const checksumFile = path.join(releaseOutputDir, "SHA256SUMS.txt");
 
-fs.writeFileSync(
-  checksumFile,
-  `${checksums.join("\n")}\n`,
-  "utf8",
-);
+fs.writeFileSync(checksumFile, `${checksums.join("\n")}\n`, "utf8");
 
-console.log(
-  "✓ SHA256SUMS.txt",
-);
+console.log("✓ SHA256SUMS.txt");
 
 //
 // Dry run
@@ -649,20 +507,12 @@ if (dryRun) {
   console.log("───────");
   console.log(`Version: ${version}`);
   console.log(`Tag: ${tag}`);
-  console.log(
-    `Assets: ${assets.length}`,
-  );
-  console.log(
-    `Checksum: ${checksumFile}`,
-  );
-  console.log(
-    `Changelog: ${changelogFile}`,
-  );
+  console.log(`Assets: ${assets.length}`);
+  console.log(`Checksum: ${checksumFile}`);
+  console.log(`Changelog: ${changelogFile}`);
   console.log("");
 
-  console.log(
-    "No commit, tag, push, or release was created.",
-  );
+  console.log("No commit, tag, push, or release was created.");
 
   process.exit(0);
 }
@@ -676,17 +526,12 @@ const releaseRecord: ReleaseRecord = {
   tag,
   product: config.productName,
   repository: config.repository,
-  generatedAt:
-    new Date().toISOString(),
+  generatedAt: new Date().toISOString(),
   changelog: "CHANGELOG.md",
   assets,
 };
 
-const releaseRecordPath =
-  path.join(
-    releaseRecordDir,
-    `${version}.json`,
-  );
+const releaseRecordPath = path.join(releaseRecordDir, `${version}.json`);
 
 fs.mkdirSync(releaseRecordDir, {
   recursive: true,
@@ -694,127 +539,63 @@ fs.mkdirSync(releaseRecordDir, {
 
 fs.writeFileSync(
   releaseRecordPath,
-  `${JSON.stringify(
-    releaseRecord,
-    null,
-    2,
-  )}\n`,
+  `${JSON.stringify(releaseRecord, null, 2)}\n`,
   "utf8",
 );
 
-console.log(
-  "\n✓ Release metadata generated",
-);
+console.log("\n✓ Release metadata generated");
 
 //
 // Commit release metadata
 //
 
-console.log(
-  "\nCommitting release metadata...",
-);
+console.log("\nCommitting release metadata...");
 
-run(
-  "git",
-  [
-    "add",
-    releaseRecordPath,
-  ],
-  {
-    stdio: "inherit",
-  },
-);
+run("git", ["add", releaseRecordPath], {
+  stdio: "inherit",
+});
 
-run(
-  "git",
-  [
-    "commit",
-    "-m",
-    `release: ${tag}`,
-  ],
-  {
-    stdio: "inherit",
-  },
-);
+run("git", ["commit", "-m", `release: ${tag}`], {
+  stdio: "inherit",
+});
 
 //
 // Push release metadata
 //
 
-console.log(
-  "\nPushing release metadata...",
-);
+console.log("\nPushing release metadata...");
 
-const branch = run("git", [
-  "branch",
-  "--show-current",
-]);
+const branch = run("git", ["branch", "--show-current"]);
 
 if (!branch) {
-  fail(
-    "Unable to determine current Git branch.",
-  );
+  fail("Unable to determine current Git branch.");
 }
 
-run(
-  "git",
-  [
-    "push",
-    "origin",
-    branch,
-  ],
-  {
-    stdio: "inherit",
-  },
-);
+run("git", ["push", "origin", branch], {
+  stdio: "inherit",
+});
 
 //
 // Create annotated tag
 //
 
-console.log(
-  `\nCreating tag ${tag}...`,
-);
+console.log(`\nCreating tag ${tag}...`);
 
-run(
-  "git",
-  [
-    "tag",
-    "-a",
-    tag,
-    "-m",
-    `Majik Signature ${tag}`,
-  ],
-  {
-    stdio: "inherit",
-  },
-);
+run("git", ["tag", "-a", tag, "-m", `Majik Signature ${tag}`], {
+  stdio: "inherit",
+});
 
-run(
-  "git",
-  [
-    "push",
-    "origin",
-    tag,
-  ],
-  {
-    stdio: "inherit",
-  },
-);
+run("git", ["push", "origin", tag], {
+  stdio: "inherit",
+});
 
 //
 // Create draft GitHub release
 //
 
-console.log(
-  "\nCreating GitHub draft release...",
-);
+console.log("\nCreating GitHub draft release...");
 
-const assetPaths = [
-  ...installerFiles,
-  changelogFile,
-  checksumFile,
-];
+const assetPaths = [...installerFiles, changelogFile, checksumFile];
 
 run(
   "gh",
@@ -839,58 +620,36 @@ run(
 // Publish GitHub release
 //
 
-console.log(
-  "\nPublishing GitHub release...",
-);
+console.log("\nPublishing GitHub release...");
 
-run(
-  "gh",
-  [
-    "release",
-    "edit",
-    tag,
-    "--draft=false",
-  ],
-  {
-    stdio: "inherit",
-  },
-);
+run("gh", ["release", "edit", tag, "--draft=false"], {
+  stdio: "inherit",
+});
 
 //
 // Get final release URL
 //
 
-const releaseUrl = run(
-  "gh",
-  [
-    "release",
-    "view",
-    tag,
-    "--json",
-    "url",
-    "--jq",
-    ".url",
-  ],
-);
+const releaseUrl = run("gh", [
+  "release",
+  "view",
+  tag,
+  "--json",
+  "url",
+  "--jq",
+  ".url",
+]);
 
 //
 // Complete
 //
 
-console.log(
-  "\n──────────────────────────────────",
-);
+console.log("\n──────────────────────────────────");
 
-console.log(
-  `✓ ${config.productName} ${tag} published`,
-);
+console.log(`✓ ${config.productName} ${tag} published`);
 
-console.log(
-  `✓ Release: ${releaseUrl}`,
-);
+console.log(`✓ Release: ${releaseUrl}`);
 
-console.log(
-  "──────────────────────────────────",
-);
+console.log("──────────────────────────────────");
 
 console.log("");
