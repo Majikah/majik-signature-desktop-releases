@@ -1,0 +1,50 @@
+{
+  "version": "0.17.0",
+  "tag": "v0.17.0",
+  "product": "Majik Signature",
+  "repository": "Majikah/majik-signature-desktop-releases",
+  "generatedAt": "2026-09-29T17:33:59.482Z",
+  "changelog": "CHANGELOG.md",
+  "assets": [
+    {
+      "filename": "Majik Signature_0.17.0_amd64.AppImage",
+      "size": 120728056,
+      "sha256": "c98bbf49b24a7197288b03447fa2ed376e05d1b27af3e0f994d273b1b6b83fdf"
+    },
+    {
+      "filename": "Majik Signature_0.17.0_amd64.deb",
+      "size": 45458308,
+      "sha256": "0919d6480fd262b6341ee2d672c36f6d2ec3847eb707b20379bf77edee5c0d57"
+    },
+    {
+      "filename": "Majik Signature_0.17.0_x64_en-US.msi",
+      "size": 76533760,
+      "sha256": "252d81578b90c961bc864b4fb28598a19316afc72f08ae71456a25bbfef6655f"
+    },
+    {
+      "filename": "Majik Signature_0.17.0_x64-setup.exe",
+      "size": 59961904,
+      "sha256": "701b5bc76c7ae36f56c7743dd6876b7e95b0ccd39a5a364f1e9684967a6eea59"
+    },
+    {
+      "filename": "Majik Signature-0.17.0-1.x86_64.rpm",
+      "size": 45459686,
+      "sha256": "b8258cdb2b8523fa1257c268ba8221189e26b176c8f208d4db11c8811be0ce1e"
+    },
+    {
+      "filename": "majik-signature_0.17.0_amd64.snap",
+      "size": 157601792,
+      "sha256": "42d6be8f8cdcd25e365aeaeda370d012a1006e296956e7f32a25d41532e89913"
+    },
+    {
+      "filename": "majik-signature_0.17.0.0_x64.msix",
+      "size": 78365618,
+      "sha256": "34fc79bf2adb37f639e722cadfb2772ec07b611d78572d22d77a22ad8c52cfcc"
+    },
+    {
+      "filename": "CHANGELOG.md",
+      "size": 13051,
+      "sha256": "9657ee97032653c3d7ebd9a8afec60b759dd28c99690042510ae6f0e21bf8dbb"
+    }
+  ]
+}
