@@ -250,7 +250,7 @@ Majik Notary can be used with documents, images, audio, video, applications, sof
 Learn more:
 
 [Majik Notary Explained](https://majikah.solutions/articles/majik-notary-explained)
-[How to Notarize Sealed Files]([https://majikah.solutions/articles/majik-notary-explained](https://majikah.solutions/products/majik-signature/docs/ms-notarizing-sealed-files))
+[How to Notarize Sealed Files](https://majikah.solutions/products/majik-signature/docs/ms-notarizing-sealed-files)
 
 ---
 
