@@ -23,3 +23,12 @@ package-all-legacy.ts
 dist
 
 .release-test
+
+
+_key
+
+.key
+
+scripts/key
+
+.env

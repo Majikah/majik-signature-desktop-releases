@@ -15,7 +15,8 @@
     "test:release:shasums": "tsx scripts/test/release/shasums.ts",
     "test:release:signature": "tsx scripts/test/release/majik-signature.ts",
     "test:release:record": "tsx scripts/test/release/release-record.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "majik:keyload": "tsx scripts/key/load-key.ts"
   },
   "engines": {
     "node": ">=22"
@@ -24,6 +25,7 @@
     "@majikah/majik-key": "^0.7.0",
     "@majikah/majik-signature": "^0.7.2",
     "@types/node": "^26.6.4",
+    "jszip": "^3.10.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
