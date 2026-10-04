@@ -1,3 +1,4 @@
+import "dotenv/config";
 import fs from "node:fs";
 import path from "node:path";
 import { parseArguments } from "./release/arguments";
@@ -6,6 +7,7 @@ import { ensureDirectory, readJson } from "./release/utils";
 import { assertGitWorkingTreeClean, assertReleaseDoesNotExist, assertRemoteTagDoesNotExist, assertRepository, checkGitHubAuthentication, validateReleaseInput, } from "./release/preflight";
 import { hashFile, hashFiles } from "./release/hash";
 import { generateSbom } from "./release/sbom";
+import { formatSpdxSbom } from "./release/format/sbom";
 import { createReleaseManifest, writeReleaseManifest, } from "./release/release-manifest";
 import { createSha256SumsFile } from "./release/shasums";
 import { resolveReleaseSigningKey } from "./release/majik-key-resolver";
@@ -49,9 +51,23 @@ const changelogAsset = await hashFile(input.changelogFile);
 console.log("✓ CHANGELOG.md");
 // Phase 5 — Generate SBOM
 const generatedSbom = await generateSbom(ROOT, paths.releaseOutputDir, config.sbom);
-const sbomAsset = generatedSbom
-    ? await hashFile(generatedSbom.filePath)
-    : undefined;
+let sbomAsset;
+let sbomReportAsset;
+if (generatedSbom) {
+    sbomAsset = await hashFile(generatedSbom.filePath);
+    // Parse and normalize the generated SPDX document
+    const contents = fs.readFileSync(generatedSbom.filePath, "utf8");
+    const sbom = formatSpdxSbom(contents, {
+        corePackagePatterns: [/^@majikah\//],
+        includeDescription: false,
+        includePurl: false,
+    });
+    // Write human-readable Markdown report
+    const markdownPath = path.join(paths.releaseOutputDir, "SBOM_REPORT.md");
+    fs.writeFileSync(markdownPath, sbom.markdown, "utf8");
+    sbomReportAsset = await hashFile(markdownPath);
+    console.log("✓ SBOM_REPORT.md");
+}
 // Phase 6 — Generate release manifest
 console.log("\nGenerating release manifest...");
 const manifest = createReleaseManifest(paths, config, installerAssets.map(({ absolutePath, ...asset }) => asset), {
@@ -74,7 +90,7 @@ console.log("\nGenerating SHA256SUMS.txt...");
 const checksumInputs = [
     ...installerAssets,
     changelogAsset,
-    ...(sbomAsset ? [sbomAsset] : []),
+    ...(sbomAsset && sbomReportAsset ? [sbomAsset, sbomReportAsset] : []),
     manifestAsset,
 ];
 createSha256SumsFile(paths.checksumFile, checksumInputs);
@@ -91,11 +107,15 @@ const filesToSign = [
         absolutePath: input.changelogFile,
         path: changelogAsset.filename,
     },
-    ...(generatedSbom && sbomAsset
+    ...(generatedSbom && sbomAsset && sbomReportAsset
         ? [
             {
                 absolutePath: generatedSbom.filePath,
                 path: sbomAsset.filename,
+            },
+            {
+                absolutePath: sbomReportAsset.absolutePath,
+                path: sbomReportAsset.filename,
             },
         ]
         : []),
@@ -145,7 +165,7 @@ console.log("\nGenerating release record...");
 const releaseMetadata = [
     manifestAsset,
     checksumAsset,
-    ...(sbomAsset ? [sbomAsset] : []),
+    ...(sbomAsset && sbomReportAsset ? [sbomAsset, sbomReportAsset] : []),
     ...(majikSignatureAsset ? [majikSignatureAsset] : []),
 ];
 const releaseRecord = createReleaseRecord(paths, config, installerAssets, releaseMetadata);
@@ -160,7 +180,9 @@ const releaseAssets = [
     paths.changelogFile,
     paths.checksumFile,
     paths.manifestFile,
-    ...(sbomAsset ? [sbomAsset.absolutePath] : []),
+    ...(sbomAsset && sbomReportAsset
+        ? [sbomAsset.absolutePath, sbomReportAsset.absolutePath]
+        : []),
     ...(majikSignatureAsset ? [majikSignatureAsset.absolutePath] : []),
 ];
 createDraftGitHubRelease(config.repository, config.productName, paths, releaseAssets);
