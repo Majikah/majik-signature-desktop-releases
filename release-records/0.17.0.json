@@ -1,10 +1,17 @@
 {
+  "schemaVersion": 1,
   "version": "0.17.0",
   "tag": "v0.17.0",
   "product": "Majik Signature",
   "repository": "Majikah/majik-signature-desktop-releases",
-  "generatedAt": "2026-09-29T17:33:59.482Z",
-  "changelog": "CHANGELOG.md",
+  "sourceRepository": "Majikah/majik-signature-desktop",
+  "releaseAutomationCommit": "3c3b99b1041bb8afcc14efd07debf0ef79ffea81",
+  "generatedAt": "2026-10-04T17:48:08.304Z",
+  "changelog": {
+    "filename": "CHANGELOG.md",
+    "size": 13051,
+    "sha256": "9657ee97032653c3d7ebd9a8afec60b759dd28c99690042510ae6f0e21bf8dbb"
+  },
   "assets": [
     {
       "filename": "Majik Signature_0.17.0_amd64.AppImage",
@@ -40,11 +47,13 @@
       "filename": "majik-signature_0.17.0.0_x64.msix",
       "size": 78365618,
       "sha256": "34fc79bf2adb37f639e722cadfb2772ec07b611d78572d22d77a22ad8c52cfcc"
-    },
-    {
-      "filename": "CHANGELOG.md",
-      "size": 13051,
-      "sha256": "9657ee97032653c3d7ebd9a8afec60b759dd28c99690042510ae6f0e21bf8dbb"
     }
-  ]
+  ],
+  "sbom": {
+    "filename": "SBOM.spdx.json",
+    "size": 752693,
+    "sha256": "f6ea01d38e1c59031f8e5c7ec39efc582936324fe794d6ad30e3e86240041b15",
+    "format": "spdx",
+    "type": "application"
+  }
 }
