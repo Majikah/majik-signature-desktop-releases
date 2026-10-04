@@ -16,14 +16,15 @@
     "test:release:signature": "tsx scripts/test/release/majik-signature.ts",
     "test:release:record": "tsx scripts/test/release/release-record.ts",
     "typecheck": "tsc --noEmit",
-    "majik:keyload": "tsx scripts/key/load-key.ts"
+    "majik:keyload": "tsx scripts/key/load-key.ts",
+    "test:msix": "tsx scripts/test/msix-signing.ts"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
     "@majikah/majik-key": "^0.7.0",
-    "@majikah/majik-signature": "^0.7.2",
+    "@majikah/majik-signature": "^0.8.0",
     "@types/node": "^26.6.4",
     "dotenv": "^18.0.5",
     "jszip": "^3.10.2",
