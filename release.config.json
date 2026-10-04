@@ -1,6 +1,7 @@
 {
     "repository": "Majikah/majik-signature-desktop-releases",
     "productName": "Majik Signature",
+    "sourceRepository": "Majikah/majik-signature-desktop",
     "platforms": {
         "windows": {
             "enabled": true,
@@ -25,5 +26,18 @@
                 ".dmg"
             ]
         }
+    },
+    "sbom": {
+        "enabled": true,
+        "cwd": "../majik-signature-desktop",
+        "format": "spdx",
+        "type": "application",
+        "filename": "SBOM.spdx.json"
+    },
+    "signing": {
+        "enabled": true,
+        "keyPathEnv": "MAJIK_RELEASE_KEY_PATH",
+        "passphraseEnv": "MAJIK_RELEASE_KEY_PASSPHRASE",
+        "outputFilename": "MAJIK-SIGNATURE.mjksmap"
     }
 }

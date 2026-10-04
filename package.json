@@ -4,14 +4,27 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "package:all": "node scripts/package-all.ts",
+    "package:all": "tsx scripts/package-all.ts",
+    "package:dry-run": "tsx scripts/package-all.ts --dry-run",
+    "test:release": "tsx scripts/test/release/all.ts",
+    "test:release:arguments": "tsx scripts/test/release/arguments.ts",
+    "test:release:paths": "tsx scripts/test/release/paths.ts",
+    "test:release:hash": "tsx scripts/test/release/hash.ts",
+    "test:release:sbom": "tsx scripts/test/release/sbom.ts",
+    "test:release:manifest": "tsx scripts/test/release/manifest.ts",
+    "test:release:shasums": "tsx scripts/test/release/shasums.ts",
+    "test:release:signature": "tsx scripts/test/release/majik-signature.ts",
+    "test:release:record": "tsx scripts/test/release/release-record.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
-    "@types/node": "^26.6.3",
+    "@majikah/majik-key": "^0.7.0",
+    "@majikah/majik-signature": "^0.7.2",
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }
