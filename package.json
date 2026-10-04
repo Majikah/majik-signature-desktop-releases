@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "package:all": "tsx scripts/package-all.ts",
-    "package:dry-run": "tsx scripts/package-all.ts --dry-run",
+    "package:dry-run": "tsx scripts/package-all.ts 0.18.0 --dry-run",
     "test:release": "tsx scripts/test/release/all.ts",
     "test:release:arguments": "tsx scripts/test/release/arguments.ts",
     "test:release:paths": "tsx scripts/test/release/paths.ts",

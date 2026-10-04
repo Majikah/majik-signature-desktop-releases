@@ -15,6 +15,7 @@ import {
 } from "./release/preflight";
 import { hashFile, hashFiles } from "./release/hash";
 import { generateSbom } from "./release/sbom";
+import { formatSpdxSbom } from "./release/format/sbom";
 import {
   createReleaseManifest,
   writeReleaseManifest,
@@ -92,9 +93,27 @@ const generatedSbom = await generateSbom(
   config.sbom,
 );
 
-const sbomAsset = generatedSbom
-  ? await hashFile(generatedSbom.filePath)
-  : undefined;
+let sbomAsset: Awaited<ReturnType<typeof hashFile>> | undefined;
+let sbomReportAsset: Awaited<ReturnType<typeof hashFile>> | undefined;
+
+if (generatedSbom) {
+  sbomAsset = await hashFile(generatedSbom.filePath);
+
+  // Parse and normalize the generated SPDX document
+  const contents = fs.readFileSync(generatedSbom.filePath, "utf8");
+  const sbom = formatSpdxSbom(contents, {
+    corePackagePatterns: [/^@majikah\//],
+    includeDescription: false,
+    includePurl: false,
+  });
+
+  // Write human-readable Markdown report
+  const markdownPath = path.join(paths.releaseOutputDir, "SBOM_REPORT.md");
+  fs.writeFileSync(markdownPath, sbom.markdown, "utf8");
+
+  sbomReportAsset = await hashFile(markdownPath);
+  console.log("✓ SBOM_REPORT.md");
+}
 
 // Phase 6 — Generate release manifest
 console.log("\nGenerating release manifest...");
@@ -129,7 +148,7 @@ console.log("\nGenerating SHA256SUMS.txt...");
 const checksumInputs = [
   ...installerAssets,
   changelogAsset,
-  ...(sbomAsset ? [sbomAsset] : []),
+  ...(sbomAsset && sbomReportAsset ? [sbomAsset, sbomReportAsset] : []),
   manifestAsset,
 ];
 
@@ -150,11 +169,15 @@ const filesToSign: ReleaseFileToSign[] = [
     absolutePath: input.changelogFile,
     path: changelogAsset.filename,
   },
-  ...(generatedSbom && sbomAsset
+  ...(generatedSbom && sbomAsset && sbomReportAsset
     ? [
         {
           absolutePath: generatedSbom.filePath,
           path: sbomAsset.filename,
+        },
+        {
+          absolutePath: sbomReportAsset.absolutePath,
+          path: sbomReportAsset.filename,
         },
       ]
     : []),
@@ -216,7 +239,7 @@ console.log("\nGenerating release record...");
 const releaseMetadata = [
   manifestAsset,
   checksumAsset,
-  ...(sbomAsset ? [sbomAsset] : []),
+  ...(sbomAsset && sbomReportAsset ? [sbomAsset, sbomReportAsset] : []),
   ...(majikSignatureAsset ? [majikSignatureAsset] : []),
 ];
 
@@ -241,7 +264,9 @@ const releaseAssets = [
   paths.changelogFile,
   paths.checksumFile,
   paths.manifestFile,
-  ...(sbomAsset ? [sbomAsset.absolutePath] : []),
+  ...(sbomAsset && sbomReportAsset
+    ? [sbomAsset.absolutePath, sbomReportAsset.absolutePath]
+    : []),
   ...(majikSignatureAsset ? [majikSignatureAsset.absolutePath] : []),
 ];
 
