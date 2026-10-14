@@ -34,14 +34,16 @@ The application source code and project development resources are maintained sep
 
 ### 🌐 Official Links
 
-| Resource                   | Link                                                                                             |
-| -------------------------- | ------------------------------------------------------------------------------------------------ |
-| 🌐 Product Website         | [majikah.solutions/products/majik-signature](https://majikah.solutions/products/majik-signature) |
-| 📥 Downloads               | [GitHub Releases](https://github.com/Majikah/majik-signature-desktop-releases/releases)          |
-| 📚 Documentation           | [Majik Signature Documentation](https://majikah.solutions/products/majik-signature/docs)         |
-| 🔐 `.mjksig` Specification | [MJKSIG Specification](https://github.com/Majikah/majik-signature/blob/main/MJKSIG_SPEC.md)      |
-| 🧾 `.mjksig` Media Type    | [IANA Registration](https://www.iana.org/assignments/media-types/application/vnd.majikah.mjksig) |
-| 🏢 Majikah                 | [majikah.solutions](https://majikah.solutions)                                                   |
+| Resource | Link |
+|---|---|
+| 🌐 Product Website | [majikah.solutions/products/majik-signature](https://majikah.solutions/products/majik-signature) |
+| 📥 Downloads | [GitHub Releases](https://github.com/Majikah/majik-signature-desktop-releases/releases) |
+| 📚 Documentation | [Majik Signature Documentation](https://majikah.solutions/products/majik-signature/docs) |
+| 🔐 `.mjksig` Specification | [MJKSIG Specification](https://github.com/Majikah/majik-signature/blob/main/MJKSIG_SPEC.md) |
+| 🔐 `.mjksmap` Specification | [MJKSMAP Specification](https://github.com/Majikah/majik-signature/blob/main/MJKSMAP_SPEC.md) |
+| 🧾 `.mjksig` Media Type | [IANA Registration](https://www.iana.org/assignments/media-types/application/vnd.majikah.mjksig) |
+| 🗂️ `.mjksmap` Media Type | [IANA Registration](https://www.iana.org/assignments/media-types/application/vnd.majikah.mjksmap) |
+| 🏢 Majikah | [majikah.solutions](https://majikah.solutions) |
 
 ---
 
@@ -51,8 +53,8 @@ Download the latest version from the **[GitHub Releases](https://github.com/Maji
 
 ### Supported Platforms
 
-| Platform   | Distribution               |
-| ---------- | -------------------------- |
+| Platform  | Distribution               |
+| --------- | -------------------------- |
 | 🪟 Windows | Official Windows installer |
 | 🐧 Linux   | Official Linux packages    |
 
@@ -612,19 +614,40 @@ See the complete release history on the **[Releases page](https://github.com/Maj
 
 ---
 
-# 📜 `.mjksig` Specification
+## 📜 Signature Formats — `.mjksig` & `.mjksmap`
 
-Majik Signature uses the portable `.mjksig` Signature Envelope format for detached signatures.
+Majik Signature supports two portable, self-identifying formats for detached signatures and batch signature management. Both formats are designed to support independent parsing and verification rather than locking signed data to the desktop application.
 
-The media type has been officially registered with IANA:
+### `.mjksig` — Signature Envelope
 
-**`application/vnd.majikah.mjksig`**
+The `.mjksig` format carries a detached `MajikSignatureEnvelope`, including its signature records and associated envelope metadata. It can be distributed alongside the original file, allowing recipients to verify the signature independently using compatible Majik Signature implementations.
 
-[View the official IANA registration](https://www.iana.org/assignments/media-types/application/vnd.majikah.mjksig)
+**Registered media type:** `application/vnd.majikah.mjksig`
 
-[Read the MJKSIG specification](https://github.com/Majikah/majik-signature/blob/main/MJKSIG_SPEC.md)
+- [View the official IANA registration](https://www.iana.org/assignments/media-types/application/vnd.majikah.mjksig)
+- [Read the MJKSIG specification](https://github.com/Majikah/majik-signature/blob/main/MJKSIG_SPEC.md)
 
-The format is designed so that signatures can remain portable and independently verifiable rather than being locked to the desktop application.
+### `.mjksmap` — Signature Map
+
+The `.mjksmap` format is a versioned binary container carrying a JSON manifest for batch, folder, and archive signature management. Each entry maps a normalized relative file path and a SHA-256 content hash to a complete detached `MajikSignatureEnvelope`.
+
+MJKSMAP enables applications to associate files with their corresponding signature envelopes, check content integrity, and locate files by content when they have been moved or renamed. It is designed for workflows involving multiple signed files, including project directories, document collections, and archive-based distribution.
+
+**Registered media type:** `application/vnd.majikah.mjksmap`
+
+- [View the official IANA registration](https://www.iana.org/assignments/media-types/application/vnd.majikah.mjksmap)
+- [Read the MJKSMAP specification](https://github.com/Majikah/majik-signature/blob/main/MJKSMAP_SPEC.md)
+
+### How They Work Together
+
+| Format | Primary purpose | Contents |
+|---|---|---|
+| `.mjksig` | Individual detached signatures | A portable signature envelope |
+| `.mjksmap` | Batch and folder signature management | File paths, SHA-256 content hashes, and detached signature envelopes |
+
+MJKSMAP carries the same envelope model used by MJKSIG, so both formats work within the same signature and verification architecture. The map organizes and resolves signatures across a collection of files; the existing `MajikSignature` verification APIs remain responsible for cryptographic verification.
+
+**Security note:** MJKSMAP provides structural organization and content-based lookup, but does not independently cryptographically authenticate its manifest, file-path associations, or batch completeness. Applications requiring authenticated manifest membership or proof of batch integrity should authenticate the manifest separately.
 
 ---
 
