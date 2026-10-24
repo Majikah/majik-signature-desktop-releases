@@ -1,0 +1,72 @@
+{
+  "version": "0.19.0",
+  "tag": "v0.19.0",
+  "product": "Majik Signature",
+  "repository": "Majikah/majik-signature-desktop-releases",
+  "generatedAt": "2026-10-24T04:20:23.966Z",
+  "changelog": "CHANGELOG.md",
+  "assets": [
+    {
+      "filename": "Majik Signature_0.19.0_amd64.AppImage",
+      "size": 121571832,
+      "sha256": "a7171d8436a0325c1bcca371cfaaad69cca94c2359089608750d82c6216b6618"
+    },
+    {
+      "filename": "Majik Signature_0.19.0_amd64.deb",
+      "size": 46319668,
+      "sha256": "f936c8ab16b9e25a598f67062f8b02230cafef56ea031d21ffef96dffb77ccf5"
+    },
+    {
+      "filename": "Majik Signature_0.19.0_x64_en-US.msi",
+      "size": 76414976,
+      "sha256": "a2c3ddf01526c491e28dbcf90d2158ba8ec86323984c7ca818eac94bec05ad4d"
+    },
+    {
+      "filename": "Majik Signature_0.19.0_x64-setup.exe",
+      "size": 59751596,
+      "sha256": "43cd4fff9317b601e7c446293c7a14c30c4eecd55c2445665d01fc8e86adf9f6"
+    },
+    {
+      "filename": "Majik Signature-0.19.0-1.x86_64.rpm",
+      "size": 46327815,
+      "sha256": "2075ae46532b8cf8ea3290e802bd141f968218f328d93f3e5adcc0ad5b8f4768"
+    },
+    {
+      "filename": "majik-signature_0.19.0_amd64.snap",
+      "size": 157749248,
+      "sha256": "74a9c1659e0329c2ef3ab80790160b0618c9c3f8a5f4756f50c1e4ad35eff737"
+    },
+    {
+      "filename": "majik-signature_0.19.0.0_x64.msix",
+      "size": 78257560,
+      "sha256": "d853bc28bd3f7119cfe2b4a9d3aee83b8babf383e0187cf46d409a4301e6bfc2"
+    }
+  ],
+  "releaseMetadata": [
+    {
+      "filename": "RELEASE-MANIFEST.json",
+      "size": 1945,
+      "sha256": "fbdde46d1a46acffb4cd0aca773069358389e24ccaa86bbbbde02e1a947b4d57"
+    },
+    {
+      "filename": "SHA256SUMS.txt",
+      "size": 1040,
+      "sha256": "c3507dc227d6f470862cc79406ac5c6fccabe8944d015cb10dc7b8814a58d2f6"
+    },
+    {
+      "filename": "SBOM.spdx.json",
+      "size": 806171,
+      "sha256": "0650d6adb9cabdf9f268db5f251480046ff548cf79417f4b7528192e6eb69358"
+    },
+    {
+      "filename": "SBOM_REPORT.md",
+      "size": 27963,
+      "sha256": "2fcd1177cbb07bcab6c67df133dae854ede64bdcbec8997fb6496b7cc53e7ce4"
+    },
+    {
+      "filename": "MAJIK-SIGNATURE.mjksmap",
+      "size": 122143,
+      "sha256": "a584d1af3c9401474bf5b7a3459df7187b915b62b1ffa5b9e69d778cfd133ebb"
+    }
+  ]
+}
