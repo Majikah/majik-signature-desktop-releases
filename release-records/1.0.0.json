@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "tag": "v1.0.0",
+  "product": "Majik Signature",
+  "repository": "Majikah/majik-signature-desktop-releases",
+  "generatedAt": "2026-11-14T02:38:11.038Z",
+  "changelog": "CHANGELOG.md",
+  "assets": [
+    {
+      "filename": "Majik Signature_1.0.0_amd64.AppImage",
+      "size": 126261752,
+      "sha256": "1cd4ee938dfb5cd3c4fda8881d9c9ba10375ed1940562e2e9ba9391324f009ca"
+    },
+    {
+      "filename": "Majik Signature_1.0.0_amd64.deb",
+      "size": 51766958,
+      "sha256": "fe24ca914f0bf5890fde1d398023ba2ce291e7c7ce29b2f9cf1fbe4a30865c37"
+    },
+    {
+      "filename": "Majik Signature_1.0.0_x64_en-US.msi",
+      "size": 80437248,
+      "sha256": "97dd7e38ea8638912d28196d394b3487be7f319ae5c335217fae351f0b527b79"
+    },
+    {
+      "filename": "Majik Signature_1.0.0_x64-setup.exe",
+      "size": 62381547,
+      "sha256": "9c06b3d1435506dd5c6fd1e6c1229b80df9741066341827fffd58c0920443378"
+    },
+    {
+      "filename": "Majik Signature-1.0.0-1.x86_64.rpm",
+      "size": 51772050,
+      "sha256": "70d922b51a585ba2e567ef0118dd30d3d5e7dda23377276ef4becf4344786b70"
+    },
+    {
+      "filename": "majik-signature_1.0.0.0_x64.msix",
+      "size": 82464064,
+      "sha256": "b20f0a96032b9c415f6f6c0bd51985101cd19eb5632df8702e3d38a6f9442585"
+    }
+  ],
+  "releaseMetadata": [
+    {
+      "filename": "RELEASE-MANIFEST.json",
+      "size": 1762,
+      "sha256": "90fa14b12b0153ba41c49250fce578efe355130acdc498dd8c4b9044d8639929"
+    },
+    {
+      "filename": "SHA256SUMS.txt",
+      "size": 934,
+      "sha256": "6d2adc9f4ab9779aa87e4fce16504ce0ea20409ba94dea8a4fa80f5d1fcbad79"
+    },
+    {
+      "filename": "SBOM.spdx.json",
+      "size": 808430,
+      "sha256": "66a5a2abe3de5b14b10e316d631241e0f562049f42a641b243cbe9b01b342acc"
+    },
+    {
+      "filename": "SBOM_REPORT.md",
+      "size": 28081,
+      "sha256": "d72f4e7dfba62fe3a15f9b35dac81f0ccaa4b8802d7ae1cfe931ae84aee1ce22"
+    },
+    {
+      "filename": "MAJIK-SIGNATURE.mjksmap",
+      "size": 111956,
+      "sha256": "4a0fd41f5d529bc12a7b6fc78f4a843582d3a4efd3aff2aa36ae1bce7458a36d"
+    }
+  ]
+}
