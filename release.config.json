@@ -16,8 +16,7 @@
             "requiredExtensions": [
                 ".deb",
                 ".AppImage",
-                ".rpm",
-                ".snap"
+                ".rpm"
             ]
         },
         "macos": {
