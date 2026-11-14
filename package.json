@@ -23,10 +23,10 @@
     "node": ">=22"
   },
   "devDependencies": {
-    "@majikah/majik-key": "^0.7.0",
-    "@majikah/majik-signature": "^0.8.0",
-    "@types/node": "^26.6.4",
-    "dotenv": "^18.0.5",
+    "@majikah/majik-key": "^1.1.0",
+    "@majikah/majik-signature": "^1.2.0",
+    "@types/node": "^26.6.6",
+    "dotenv": "^18.0.10",
     "jszip": "^3.10.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
