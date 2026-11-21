@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "package:all": "tsx scripts/package-all.ts 1.0.0",
-    "package:dry-run": "tsx scripts/package-all.ts 1.0.0 --dry-run",
+    "package:all": "tsx scripts/package-all.ts 1.1.0",
+    "package:dry-run": "tsx scripts/package-all.ts 1.1.0 --dry-run",
     "test:release": "tsx scripts/test/release/all.ts",
     "test:release:arguments": "tsx scripts/test/release/arguments.ts",
     "test:release:paths": "tsx scripts/test/release/paths.ts",
