@@ -3,7 +3,7 @@
   "tag": "v1.1.0",
   "product": "Majik Signature",
   "repository": "Majikah/majik-signature-desktop-releases",
-  "generatedAt": "2026-11-21T15:48:48.853Z",
+  "generatedAt": "2026-11-21T15:50:57.182Z",
   "changelog": "CHANGELOG.md",
   "assets": [
     {
@@ -41,27 +41,27 @@
     {
       "filename": "RELEASE-MANIFEST.json",
       "size": 1761,
-      "sha256": "e37d189570ad554c7d8665510783a89b8c57d99616f9a7927936996351f2c652"
+      "sha256": "c5b415aab4b06b0e99e40c7b28197a6d4ab4d8826cabae0d35f067efacb046a2"
     },
     {
       "filename": "SHA256SUMS.txt",
       "size": 934,
-      "sha256": "215314e1ce323d5b7e4c14bddb212e891c838f6574fc078ecbcbbf0a7d815877"
+      "sha256": "16efd6e389f17ec83fe19ab31fcf4e854420b1fbfa1d62bfd00127d142eac685"
     },
     {
       "filename": "SBOM.spdx.json",
       "size": 838195,
-      "sha256": "0fe468d9dd7b00cfa9cebffae2537027e19081d71871216f15b106d346641240"
+      "sha256": "5c1b6ac6ffea764584b613ab141f45f5d3f828d786b821f7f4edfd9ba2865792"
     },
     {
       "filename": "SBOM_REPORT.md",
       "size": 29775,
-      "sha256": "6adda694766f5f09c0fc20ef32802b535c7b570959556dbe309530b505ae0b01"
+      "sha256": "c5ea4f08f20d83009371b12f4ede6d034a79248602a784f6b69823cedb838cc8"
     },
     {
       "filename": "MAJIK-SIGNATURE.mjksmap",
       "size": 111955,
-      "sha256": "b99820c7b9d2a77e3227851c491d33a0fb97cf89f27d27ca34fb04de21701e90"
+      "sha256": "32d9f4dff695c3243d149ccf4e3c1025eda8d5588fda50738835cd745ed5b8e4"
     }
   ]
 }
